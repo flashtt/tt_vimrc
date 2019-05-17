@@ -1,5 +1,10 @@
 # tt_vimrc: my own vim config
-This vim config is mostly work on Ubuntu server. So I don't want to install too much plugins and make it too colorful. There are some customized key mappings, if you don't like it, just change it.
+This vim config is mostly work on Ubuntu server. There are some customized key mappings, if you don't like it, just change it.
+
+The basic vim config is mostly copied from `amix/vimrc`, it has the ultimate vim configuration.
+
+`git clone https://github.com/amix/vimrc.git`
+
 ## Install
 First you just need to clone this repo as following:
 
