@@ -45,10 +45,13 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'jiangmiao/auto-pairs'
 
 " An asynchronous fuzzy finder which is used to quickly locate files, buffers, mrus, tags, etc. in large project.
-Plug 'Yggdroot/Leaderf', { 'do': './install.sh' }
+" Plug 'Yggdroot/Leaderf', { 'do': './install.sh' }
 
 " Vim plugin for intensely orgasmic commenting
 Plug 'scrooloose/nerdcommenter' 
+
+" Fuzzy file, buffer, mru, tag, etc finder.
+" Plug 'kien/ctrlp.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -290,6 +293,9 @@ set laststatus=2
 " Remap VIM 0 to first non-blank character
 map 0 ^
 
+" Remap double <leader> clear search highlight
+map <leader><leader> :noh
+
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
 nmap <M-k> mz:m-2<cr>`z
@@ -444,7 +450,7 @@ let g:AutoPairsFlyMode=1
 
 " Leaderf config
 " Change the default mapping of searching files command
-let g:Lf_ShortcutF = '<C-P>'
+" let g:Lf_ShortcutF = '<C-P>'
 
 " Nerdcommenter config
 " Add spaces after comment delimiters by default
@@ -457,3 +463,31 @@ let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
+
+" cscope config
+if has ("cscope")
+    set cscopetag
+    set csto=0
+    set cst
+    set nocsverb
+    nmap <Leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+    nmap <Leader>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+    nmap <Leader>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+    nmap <Leader>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+    nmap <Leader>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-p> :cs find f 
+    nmap <Leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+    nmap <Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+    " add any database in current dir
+    if filereadable("cscope.out")
+        cs add cscope.out
+    " else search cscope.out elsewhere
+    else
+        let cscope_file=findfile("cscope.out", ".;")
+        let cscope_pre=matchstr(cscope_file, ".*/")
+        " echo cscope_file
+        if !empty(cscope_file) && filereadable(cscope_file)
+            exe "cs add" cscope_file
+        endif
+    endif
+endif
