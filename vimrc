@@ -44,8 +44,9 @@ Plug 'vim-airline/vim-airline-themes'
 " Vim plugin, insert or delete brackets, parens, quotes in pair 
 Plug 'jiangmiao/auto-pairs'
 
-" An asynchronous fuzzy finder which is used to quickly locate files, buffers, mrus, tags, etc. in large project.
-" Plug 'Yggdroot/Leaderf', { 'do': './install.sh' }
+" fzf vim
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin'}
+Plug 'junegunn/fzf.vim'
 
 " Vim plugin for intensely orgasmic commenting
 Plug 'scrooloose/nerdcommenter' 
@@ -224,11 +225,11 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
-map <c-space> ?
+" map <space> /
+" map <c-space> ?
 
-" Disable highlight when <leader><cr> is pressed
-map <silent> <leader><cr> :noh<cr>
+" Disable highlight when <leader><leader> is pressed
+map <silent> <leader><leader> :noh<cr>
 
 " Smart way to move between windows
 map <C-j> <C-W>j
@@ -292,9 +293,6 @@ set laststatus=2
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remap VIM 0 to first non-blank character
 map 0 ^
-
-" Remap double <leader> clear search highlight
-map <leader><leader> :noh
 
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
@@ -439,18 +437,29 @@ set t_Co=256
 let g:airline#extensions#tabline#enabled=1
 " Show tabline buffer number
 let g:airline#extensions#tabline#buffer_nr_show=1
+" set tabline format
+let g:airline#extensions#tabline#formatter = 'unique_tail'
 " Disable tagbar in airline to improve performance
 let g:airline#extensions#tagbar#enabled=0
 " Change theme
 let g:airline_theme='dark_minimal'
 
+
 " Auto-pairs config
 " Enable jump out of multi lines brackets
 let g:AutoPairsFlyMode=1
 
-" Leaderf config
-" Change the default mapping of searching files command
-" let g:Lf_ShortcutF = '<C-P>'
+" fzf config
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'down': '~40%' }
+" Enable per-command history.
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+nmap <C-p> :Files<CR>
+nmap <C-e> :Buffers<CR>
 
 " Nerdcommenter config
 " Add spaces after comment delimiters by default
@@ -475,7 +484,6 @@ if has ("cscope")
     nmap <Leader>c :cs find c <C-R>=expand("<cword>")<CR><CR>
     nmap <Leader>t :cs find t <C-R>=expand("<cword>")<CR><CR>
     nmap <Leader>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-p> :cs find f 
     nmap <Leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
     nmap <Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
     " add any database in current dir
