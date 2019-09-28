@@ -41,18 +41,12 @@ Plug 'vim-airline/vim-airline'
 " A collection of themes for vim-airline
 Plug 'vim-airline/vim-airline-themes'
 
-" Vim plugin, insert or delete brackets, parens, quotes in pair 
-Plug 'jiangmiao/auto-pairs'
-
 " fzf vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin'}
 Plug 'junegunn/fzf.vim'
 
 " Vim plugin for intensely orgasmic commenting
 Plug 'scrooloose/nerdcommenter' 
-
-" Fuzzy file, buffer, mru, tag, etc finder.
-" Plug 'kien/ctrlp.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -294,19 +288,6 @@ set laststatus=2
 " Remap VIM 0 to first non-blank character
 map 0 ^
 
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
-if has("mac") || has("macunix")
-  nmap <D-j> <M-j>
-  nmap <D-k> <M-k>
-  vmap <D-j> <M-j>
-  vmap <D-k> <M-k>
-endif
-
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
     let save_cursor = getpos(".")
@@ -320,6 +301,19 @@ if has("autocmd")
     autocmd BufWritePre *.txt,*.py,*.wiki,*.sh,*.c,*.cc,*.cpp,*.h :call CleanExtraSpaces()
 endif
 
+" Auto pair when insert '(' and so on
+inoremap ( ()<ESC>i
+inoremap [ []<ESC>i
+inoremap { {}<ESC>i
+inoremap < <><ESC>i
+inoremap ' ''<ESC>i
+inoremap " ""<ESC>i
+
+" Tab jump out of quotes
+inoremap <TAB> <c-r>=SkipPair()<CR>
+
+" close other buffers but this
+map <leader>bo :BcloseOthers<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
@@ -409,6 +403,26 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
+function! SkipPair()
+    if getline('.')[col('.') - 1] == ')' || getline('.')[col('.') - 1] == ']' || getline('.')[col('.') - 1] == '"' || getline('.')[col('.') - 1] == "'" || getline('.')[col('.') - 1] == '}' || getline('.')[col('.') - 1] == '>'
+        return "\<ESC>la"
+    else
+        return "\t"
+    endif
+endfunction
+
+command! BcloseOthers call <SID>BufCloseOthers()
+function! <SID>BufCloseOthers()
+   let l:currentBufNum   = bufnr("%")
+   let l:alternateBufNum = bufnr("#")
+   for i in range(1,bufnr("$"))
+     if buflisted(i)
+       if i!=l:currentBufNum
+         execute("bdelete ".i)
+       endif
+     endif
+   endfor
+endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins config
