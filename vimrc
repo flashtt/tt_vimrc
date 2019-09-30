@@ -48,6 +48,12 @@ Plug 'junegunn/fzf.vim'
 " Vim plugin for intensely orgasmic commenting
 Plug 'scrooloose/nerdcommenter' 
 
+" Vimscript library of common functions
+Plug 'inkarkat/vim-ingo-library'
+
+" Highlight several words in different colors simultaneously
+Plug 'inkarkat/vim-mark'
+
 " Initialize plugin system
 call plug#end()
 
@@ -332,7 +338,7 @@ map <leader>bo :BcloseOthers<cr>
 " => Misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remove the Windows ^M - when the encodings gets messed up
-noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+" noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " Quickly open a buffer for scribble
 map <leader>q :e ~/buffer<cr>
@@ -486,6 +492,14 @@ let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
+
+" Mark config
+highlight link SearchSpecialSearchType MoreMsg
+let g:mvHistAdd = '/@'
+nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
+nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
+nmap <Leader>M <Plug>MarkToggle
+nmap <Leader>N <Plug>MarkConfirmAllClear
 
 " cscope config
 if has ("cscope")
