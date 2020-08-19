@@ -48,11 +48,8 @@ Plug 'junegunn/fzf.vim'
 " Vim plugin for intensely orgasmic commenting
 Plug 'scrooloose/nerdcommenter' 
 
-" Vimscript library of common functions
-Plug 'inkarkat/vim-ingo-library'
-
-" Highlight several words in different colors simultaneously
-Plug 'inkarkat/vim-mark'
+" vim indent line
+Plug 'Yggdroot/indentLine'
 
 " Initialize plugin system
 call plug#end()
@@ -147,7 +144,6 @@ set tm=500
 " Add a bit extra margin to the left
 " set foldcolumn=1
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -196,12 +192,17 @@ set noswapfile
 " Use spaces instead of tabs
 set expandtab
 
-" Be smart when using tabs ;)
+" Be smart when using tabs
 set smarttab
 
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
+
+" in default we use userspace tab style
+" but we can switch between userspace style and kernel style
+map <leader>kt :SetKernelTab<cr>
+map <leader>ut :SetUserTab<cr>
 
 " Linebreak on 500 characters
 set lbr
@@ -417,6 +418,7 @@ function! SkipPair()
     endif
 endfunction
 
+" close other buffers
 command! BcloseOthers call <SID>BufCloseOthers()
 function! <SID>BufCloseOthers()
    let l:currentBufNum   = bufnr("%")
@@ -428,6 +430,23 @@ function! <SID>BufCloseOthers()
        endif
      endif
    endfor
+endfunction
+
+" set userspace tab, use space instead of tab, and set tab width 4
+command! SetUserTab call SetUserTab()
+function! SetUserTab()
+    set expandtab
+    set smarttab
+    set shiftwidth=4
+    set tabstop=4
+endfunction
+
+" set kernel style tab
+command! SetKernelTab call SetKernelTab()
+function! SetKernelTab()
+    set noexpandtab
+    set shiftwidth=8
+    set tabstop=8
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -464,11 +483,6 @@ let g:airline#extensions#tagbar#enabled=0
 " Change theme
 let g:airline_theme='dark_minimal'
 
-
-" Auto-pairs config
-" Enable jump out of multi lines brackets
-let g:AutoPairsFlyMode=1
-
 " fzf config
 " Default fzf layout
 " - down / up / left / right
@@ -493,13 +507,8 @@ let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
-" Mark config
-highlight link SearchSpecialSearchType MoreMsg
-let g:mvHistAdd = '/@'
-nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
-nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
-nmap <Leader>M <Plug>MarkToggle
-nmap <Leader>N <Plug>MarkConfirmAllClear
+" indentLine config
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 " cscope config
 if has ("cscope")
